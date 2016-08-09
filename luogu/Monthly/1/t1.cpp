@@ -1,26 +1,38 @@
 #include <cstdio>
 #include <cstring>
-#include <queue>
 using namespace std;
+
+const int maxn=10000;
 
 struct Edge{
 	int v, next;
 	bool data;
 };
 
-const int maxn=10000;
+class Queue{
+	int data[5*maxn];
+	int l, r;
+public:
+	Queue(){l=0; r=0;}
+	void push(int x){data[r++] = x;}
+	int pop(){return data[l++];}
+	bool empty(){return l == r;}
+	void clean(){l=r=0;}
+};
+
 Edge way[6*maxn];
 int point[5*maxn], dis[5*maxn];
 int top, s, r;
-queue<int> list;
+Queue list;
 
 bool bfs(){
+	list.clean();
 	list.push(s);
 	memset(dis, 0, sizeof(dis));
 	dis[s] = 1;
 	int t, p, v;
 	while (!list.empty()){
-		p = list.front(); list.pop();
+		p = list.pop();
 		t = point[p];
 		while (t){
 			v = way[t].v;
