@@ -54,7 +54,7 @@ void add(int u, int v, bool data){
 
 void link(int u, int v){
 	add(u, v, 1);
-	add(u, v, 0);
+	add(v, u, 0);
 }
 
 bool dfs(int u){
