@@ -4,67 +4,57 @@ using namespace std;
 
 typedef long double LD;
 
-struct Pair{
-	LD a, b;
-	Pair(LD _x, LD _y){a = _x; b = _y;}
-}
-
 struct Data{
 	LD sum, pow;
-	Data(LD _a, LD _b){sum = _a; pow = _b;}
-	Data operator+(Data a);
-	Data& operator+=(Data a);
-	Data& operator+=(LD _a, LD _b);
-};
-
-Data Data::operator+(Data a){
-	Data ans;
-	ans.sum = this->sum + a.sum;
-	ans.pow = this->pow + a.pow;
-	return ans;
-}
-
-inline Data& operator+=(Data a){
-	this->sum += a.sum;
-	this->pow += a.pow;
-	return *this;
-}
-
-inline Data& operator+=(Pair x){
-	this->sum += x.a;
-	this->pow += x.b;
-	return *this;
+	Data(LD a=0, LD b=0){sum = a; pow = b;}
+	Data& operator+=(Data a){
+		this->sum += a.sum;
+		this->pow += a.pow;
+	}
 }
 
 struct Node{
 	int l, r;
+	LD flag;
 	Data data;
-	long double flag;
-};
+}
 
-const int maxn=(1 << 17)+1;
+const int maxn=10000000;
 Node t[maxn];
-LD a[maxn];
+LD x[100000];
+
+void update(int p, LD x){
+	t[p].pow += 2*x*t[p].sum + (r-l+1)*x*x;
+	t[p].sum += (r-l+1) * x;
+	t[p].flag += x;
+}
+
+void distFlag(int p){
+	update(2*p, t[p].flag);
+	update(2*p+1, t[p].flag);
+	t[p].flag = 0;
+}
 
 Data create(int p, int l, int r){
+	t[p].l = l;
+	t[p].r = r;
 	if (l == r){
-		t[p].l = l;
-		t[p].r = r;
-		t[p].flag = 0;
-		t[p].data = Data(a[l], a[l]*a[l]);
-		return t[p].data;
+		t[p].data.sum = x[l];
+		t[p].data.pow = x[l]*x[l];
+	} else {
+		int mid = (l+r) >> 1;
+		t[p].data = create(2*p, l, mid);
+		t[p].data += create(2*p+1, mid+1, r);
 	}
-	int mid = (l+r)/2;
-	t[p].l = l; t[p].r = r; t[p].flag = 0;
-	t[p].data += create(p << 1, l, mid) + create((p << 1)+1, mid+1, r);
 	return t[p].data;
-};
+}
 
 Data search(int p, int l, int r){
-	if (t[p].l == l && t[p].r == r) return Data;
-	int mid = (l+r)/2;
-	if (t[p].flag != 0){
-		t[2*p] += t[p].flag;
-		t[2*p+1] += t[p].flag;
-	}
+	Data ans;
+	if (t[p].l >= l && t[p].r <= r) return t[p].data;
+	if (t[p].l > r || t[p].r < l) return Data(0, 0);
+	distFlag(p);
+	ans += search(2*p, l, r);
+	ans += search(2*p+1, l, r);
+	return ans;
 }

@@ -22,7 +22,7 @@ bool bfs(){
 	while (!l.empty()){
 		u = l.front();
 		l.pop();
-		for (int t = point[u]; t; t = way[t].next)
+		for (int t = point[u]; t != -1; t = way[t].next)
 			if (way[t].data && !dis[v = way[t].v]){
 				l.push(v);
 				dis[v] = dis[u] + 1;
@@ -46,10 +46,10 @@ inline void addEdge(int u, int v){
 bool dfs(int u){
 	if (u == r) return 1;
 	int v;
-	for (int t = point[u]; t; t = way[t].next)
+	for (int t = point[u]; t != -1; t = way[t].next)
 		if (way[t].data && (dis[v = way[t].v] == dis[u] + 1) && dfs(v)){
 			way[t].data = 0;
-			if (way[t+1].v == u) way[t+1].data=1; else way[t-1].data=1;
+			way[t ^ 1].data = 1;
 			return 1;
 		}
 	return 0;
@@ -62,18 +62,21 @@ int main(){
 	s = 0; r = s3+n3+1;
 	int m, x, y;
 	scanf("%d", &m);
-	top = 1;
-	memset(point, 0, sizeof(point));
+	top = 0;
+	memset(point, -1, sizeof(point));
 	for (int i=0; i<m; i++){
 		scanf("%d %d", &x, &y);
-		addEdge(0, y); addEdge(y, s1+x); addEdge(s1+x, s2+x);
+		addEdge(y, s1+x);
 	}
 	scanf("%d", &m);
 	for (int i=0; i<m; i++){
 		scanf("%d %d", &x, &y);
-		addEdge(s2+x, s3+y); addEdge(s3+y, r);
+		addEdge(s2+x, s3+y);
 	}
+	for (int i=1; i<=n2; i++) addEdge(s, i);
+	for (int i=1; i<=n1; i++) addEdge(s1+i, s2+i);
+	for (int i=s3+1; i<r; i++) addEdge(i, r);
 	int ans=0;
-	while (bfs()) ans+=dfs(s);
+	while (bfs()) while(dfs(s)) ans++;
 	printf("%d\n", ans);
 }
