@@ -14,7 +14,7 @@ int point[5*maxn], dis[5*maxn];
 int s, r, top;
 queue<int> l;
 
-bool bfs(){
+bool bfs(int s, int r){
 	memset(dis, 0, sizeof(dis));
 	while(!l.empty()) l.pop();
 	l.push(s); dis[s]=1;
@@ -23,7 +23,7 @@ bool bfs(){
 		u = l.front();
 		l.pop();
 		for (int t = point[u]; t != -1; t = way[t].next)
-			if (way[t].data && !dis[v = way[t].v]){
+			if (way[t].data == 0 && dis[v = way[t].v] == 0){
 				l.push(v);
 				dis[v] = dis[u] + 1;
 			}
@@ -47,7 +47,7 @@ bool dfs(int u){
 	if (u == r) return 1;
 	int v;
 	for (int t = point[u]; t != -1; t = way[t].next)
-		if (way[t].data && (dis[v = way[t].v] == dis[u] + 1) && dfs(v)){
+		if (way[t].data && (dis[v = way[t].v] == dis[u] - 1) && dfs(v)){
 			way[t].data = 0;
 			way[t ^ 1].data = 1;
 			return 1;
@@ -77,6 +77,6 @@ int main(){
 	for (int i=1; i<=n1; i++) addEdge(s1+i, s2+i);
 	for (int i=s3+1; i<r; i++) addEdge(i, r);
 	int ans=0;
-	while (bfs()) while(dfs(s)) ans++;
+	while (bfs(r, s)) while(dfs(s)) ans++;
 	printf("%d\n", ans);
 }
