@@ -35,7 +35,7 @@ int main() {
 	memset(dis, 0, sizeof(dis));
 	memset(count, 0, sizeof(count));
 	makeData(n, seedA, seedB);
-	double sum = 0.0, num = 0.0;
+	long double sum = 0.0, num = 0.0;
 	for (int x1=0; x1<maxn; x1++) for (int y1=0; y1<maxn; y1++)
 	for (int x2=x1+1; x2<maxn; x2++) for (int y2=y1+1; y2<maxn; y2++) {
 		num += count[x1][y1] * count[x2][y2];
@@ -43,6 +43,6 @@ int main() {
 		     - dis[x1][y1] * count[x2][y2] + dis[x2][y2] * count[x1][y1];
 	}
 	if (num == 0.0) printf("0.00000\n");
-	else printf("%.5lf\n", sum/num);
+	else printf("%.5Lf\n", sum/num);
 	return 0;
 }
