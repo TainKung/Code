@@ -10,15 +10,39 @@ const int kM = 15;
 int a[kMax];
 int stone[110];
 
+int jumpWithSameStep(int l, int step, int m) {
+	for (int i=0; i<m; i++)
+		if (stone[i] % step == 0)
+			a[0]++;
+	return a[0];
+}
+
+int cal(int s, int t) {
+	if (s == t) return -1;
+	int i=1;
+	while ((i+1)*s - i*t > 0) i++;
+	return i;
+}
+
 int main() {
 	int l, s, t, m;
 	scanf("%d", &l);
 	scanf("%d%d%d", &s, &t, &m);
 	for (int i=0; i<m; i++)
 		scanf("%d", stone+i);
+	if (s == t) { // use special method.
+		printf("Use the special method for same step.\n");
+		printf("%d\n", jumpWithSameStep(l, s, m));
+		return 0;
+	}
 	a[0] = 0;
 	int p = 0;
+	int sign = cal(s, t)*s;
 	sort(stone, stone+m);
+	printf("\nHere are sorted stones.\n");
+	for (int i=0; i<m; i++) printf("%d ", stone[i]);
+	printf("\n\n");
+	printf("Min distance for speed up: %d\n\n", sign);
 	for (int i=s; i<=l+t-1; i++) {
 		a[i & kM] = INT_MAX;
 		for (int j=i-s; (j>=i-t) && (j>=0); j--)
@@ -27,6 +51,14 @@ int main() {
 		if (stone[p] == i) {
 			a[i & kM]++;
 			p++;
+		}
+		if ((p == 0 || i == stone[p-1]+t) && stone[p]-t-i >= sign) {
+			int minA = INT_MAX;
+			for (int j=i; j>=0 && j>=i-t; j--)
+				if (a[i & kM] < minA) minA = a[i & kM];
+			for (int j=0; j<kMax; j++) a[j] = minA;
+			printf("Speed up from %d to %d\n", i, stone[p]-1);
+			i = stone[p]-1;
 		}
 	}
 	int result = INT_MAX;
