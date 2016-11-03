@@ -1,13 +1,12 @@
+#include <cstdio>
+#include <cstring>
 #include <iostream>
-#include <queue>
 using namespace std;
 
-int main(){
-	int a, b;
-	cin >> a >> b;
-	queue<int> list;
-	list.push(a);
-	list.push(b);
-	cout << list.empty() << endl << list.size() << endl << int(list.size()/sizeof(int)) << endl << list.front();
-	return 0;
+int main() {
+    char s1[100], s2[100];
+    gets(s1);
+    scanf("%[^\n]", s2);
+    printf("%d, %d\n", strlen(s1), strlen(s2));
+    return 0;
 }

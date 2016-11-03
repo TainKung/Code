@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <cstring>
-// #include <iostream>
 using namespace std;
 
 const int kMax=30;
