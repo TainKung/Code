@@ -15,6 +15,8 @@ int main() {
 
     memset(a, 0, sizeof(a));
     a[0][0] = 1;
+    for (int i=1; i<=la && sa[i-1] == '*'; i++)
+        a[i][0] = 1;
     for (int i=1; i<=la; i++) for (int j=1; j<=lb; j++) {
         switch (sa[i-1]) {
             case '?':

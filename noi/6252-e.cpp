@@ -35,7 +35,13 @@ int main () {
                 match[i][j]=mtc;
             } else match[i][j]=0;
         }
-    if (!match[strlen (mat)-1][strlen (str)-1]) cout<<"not matched";
-    else cout<<"matched";
+    if (!match[strlen (mat)-1][strlen (str)-1]) cout<<"not matched\n";
+    else cout<<"matched\n";
+
+    for (int i=0; i<strlen(mat); i++) {
+        for (int j=0; j<strlen(str); j++)
+            printf("%d ", match[i][j]);
+        printf("\n");
+    }
     return 0;
 }
