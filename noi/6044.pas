@@ -8,12 +8,12 @@ type
 const
   maxn=200;
 var
-  map, visit:array[1..maxn, 1..maxn] of boolean;
-  energy:array[1..maxn, 1..maxn] of longint;
+  map:array[1..maxn, 1..maxn] of boolean;
+  ene:array[1..maxn, 1..maxn] of longint;
   s, t:coordinate;
   list:array[0..1000000] of element;
   head, tail:longint;
-  ans, m, n, k:longint;
+  m, n, k:longint;
 
 function coor(x, y:longint):coordinate;
   begin
@@ -24,8 +24,7 @@ function coor(x, y:longint):coordinate;
 procedure init;
   begin
     fillchar(map, sizeof(map), true);
-    fillchar(visit, sizeof(visit), false);
-    ans:=maxlongint;
+    fillchar(ene, sizeof(ene), -1);
   end;
 
 procedure readin;
@@ -34,13 +33,12 @@ procedure readin;
     c:char;
   begin
     readln(m, n, k);
-    fillchar(map, sizeof(map), true);
     for i:=1 to m do
     begin
       for j:=1 to n do
       begin
         read(c);
-        case c of:
+        case c of
           '#':map[i, j]:=false;
           '@':s:=coor(i, j);
           '+':t:=coor(i, j);
@@ -75,21 +73,45 @@ function list_empty:boolean;
     exit(head >= tail);
   end;
 
-procedure bfs(source:coordinate);
+function bfs(source:coordinate):longint;
   const
     dx:array[1..4] of longint=( 0, 0, 1,-1);
     dy:array[1..4] of longint=( 1,-1, 0, 0);
+  var
+    u:element;
+    i, nx, ny:longint;
   begin
     list_init;
     list_push(source, 0, k);
     while not list_empty do
     begin
       u:=list_pop;
-      for i:=1 to 4 do
+      with u do
       begin
-        nx:=u.x+dx[i];
-        ny:=u.y+dy[i];
-        if map[nx, ny] and (energy[x, y] < energy[nx, ny]) then
-          list_push(coor(nx, ny), u.time+1, energy[x, y]);
-        else if not map[nx, ny] and (energy[x, y]+1 < energy[nx, ny]) then
-          list_push(coor[nx, ny], u.time+1, energy[x, y]+1)
+        if (point.x = t.x) and (point.y = t.y) then exit(time);
+        with point do
+          for i:=1 to 4 do
+          begin
+            nx:=x+dx[i];
+            ny:=y+dy[i];
+            if (nx < 1) or (nx > m) or (ny < 1) or (ny > n) then continue;
+            if map[nx, ny] and (ene[x, y] > ene[nx, ny]) then
+            begin
+              list_push(coor(nx, ny), time+1, ene[x, y]);
+              ene[nx, ny]:=ene[x, y];
+            end
+            else if not map[nx, ny] and (ene[x, y]-1 > ene[nx, ny]) then
+            begin
+              list_push(coor(nx, ny), time+1, ene[x, y]-1);
+              ene[nx, ny]:=ene[x, y]-1;
+            end;
+          end;
+      end;
+    end;
+  end;
+
+begin
+  init;
+  readin;
+  writeln(bfs(s));
+end.
