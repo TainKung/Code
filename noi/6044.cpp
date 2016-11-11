@@ -1,6 +1,9 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <algorithm>
+#include <queue>
+using namespace std;
 
 const int kMax=210;
 bool map[kMax][kMax];
@@ -8,10 +11,15 @@ int M, N, T;
 
 struct coordinate {
     int x, y;
-    coordinate(int _x=0, int _y=0) :x(_x), y(_y) {}
+};
+
+struct element {
+    coordinate point;
+    int time, energy;
 };
 
 coordinate a, b;
+queue<element> list;
 
 void readin() {
     char t;
@@ -22,10 +30,10 @@ void readin() {
             scanf("%c", &t);
             switch (t) {
                 case '@':
-                    a = coordinate(i, j);
+                    a.x = i; a.y = j;
                     break;
                 case '|':
-                    b = coordinate(i, j);
+                    b.x = i; b.y = j;
                     break;
                 case '#':
                     map[i][j] = 0;
@@ -34,10 +42,11 @@ void readin() {
                     return;
             }
         }
-        scanf("%d")
+        scanf("%c");
     }
 }
 
 int main() {
+    readin();
     return 0;
 }
