@@ -36,3 +36,6 @@
 *.out
 *.txt
 *.log
+
+# OS X System Folders
+*.DS_Store

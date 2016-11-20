@@ -7,7 +7,7 @@ using namespace std;
 
 #define INIT(arr, value) memset(arr, value, sizeof(arr))
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
 #define debug(a) a
 #else
@@ -31,7 +31,8 @@ struct Graph{
     }
 } graph, r_graph;
 queue<int> list;
-int visited[kMaxN], avail[kMaxN], time[kMaxN]; 
+bool visited[kMaxN], avail[kMaxN];
+int time[kMaxN]; 
 int s, t;
 
 void bfs(Graph *g, int source) {
@@ -60,15 +61,25 @@ void erase(int u) {
         avail[r_graph.edge[p].v] = 0;
 }
 
+debug(
+void printEdge(Graph *g, int n) {
+    for (int i=1; i<=n; i++) for (int p=g->head[i]; p!=-1; p=g->edge[p].next)
+        printf("%d->%d\n", i, g->edge[p].v);
+}
+)
+
 int main() {
     int n, m;
     scanf("%d%d", &n, &m);
     for (int i=0, u, v; i<m; i++) {
         scanf("%d%d", &u, &v);
         graph.addEdge(u, v);
-        r_graph.addEdge(u, v);
+        r_graph.addEdge(v, u);
     }
     scanf("%d%d", &s, &t);
+    debug(printEdge(&graph, n);)
+    debug(printEdge(&r_graph, n);)
+    INIT(avail, 1);
     bfs(&r_graph, t);
     debug(for (int i=1; i<=n; i++) printf("%d ", visited[i]); printf("\n");)
     for (int i=1; i<=n; i++) if (!visited[i]) erase(i);
